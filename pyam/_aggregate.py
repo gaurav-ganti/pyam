@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 import logging
 
@@ -105,6 +106,31 @@ def _aggregate_region(df, variable, region, subregions=None, components=False,
 
     return _data
 
+
+def _aggregate_time(df, variable, column, value, components, method=np.sum):
+    """Internal implementation for aggregating data over subannual time"""
+    # default `components` to all entries in `column` other than `value`
+    if components is None:
+        components = list(set(df.data.subannual.unique()) - set([value]))
+
+    # compute aggregate over time
+    filter_args = dict(variable=variable)
+    filter_args[column] = components
+    index = _list_diff(df.data.columns, [column, 'value'])
+
+    _data = pd.concat(
+        [
+            df.filter(**filter_args).data
+            .pivot_table(index=index, columns=column)
+            .value
+            .rename_axis(None, axis=1)
+            .apply(_get_method_func(method), axis=1)
+        ], names=[column]+index, keys=value)
+
+    # reset index-level order to original IamDataFrame
+    _data.index = _data.index.reorder_levels(df._LONG_IDX)
+
+    return _data
 
 def _group_and_agg(df, by, method=np.sum):
     """Groupby & aggregate `df` by column(s), return indexed `pd.Series`"""
