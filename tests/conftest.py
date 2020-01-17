@@ -137,6 +137,23 @@ def simple_df(request):
     yield IamDataFrame(model='model_a', scenario='scen_a', data=_df)
 
 
+# IamDataFrame with subannual time resolution
+@pytest.fixture(scope="function")
+def subannual_df():
+    _df = FULL_FEATURE_DF.iloc[0:6].copy()
+    years = [2005, 2010]
+
+    def add_subannual(_data, name, value):
+        _data['subannual'] = name
+        _data[years] = _data[years] * value
+        return _data
+
+    mapping = [('year', 1), ('winter', 0.7), ('summer', 0.3)]
+    lst = [add_subannual(_df.copy(), name, value) for name, value in mapping]
+
+    yield IamDataFrame(model='model_a', scenario='scen_a', data=pd.concat(lst))
+
+
 @pytest.fixture(scope="function")
 def reg_df():
     df = IamDataFrame(data=REG_DF)
