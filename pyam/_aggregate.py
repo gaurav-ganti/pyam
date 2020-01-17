@@ -50,8 +50,8 @@ def _aggregate(df, variable, components=None, method=np.sum):
     return _group_and_agg(_df, [], method)
 
 
-def _aggregate_region(self, variable, region, subregions=None,
-                      components=False, method='sum', weight=None):
+def _aggregate_region(df, variable, region, subregions=None, components=False,
+                      method='sum', weight=None):
     """Internal implementation for aggregating data over subregions"""
     if not isstr(variable) and components is not False:
         msg = 'aggregating by list of variables with components ' \
@@ -63,7 +63,7 @@ def _aggregate_region(self, variable, region, subregions=None,
         raise ValueError(msg)
 
     # default subregions to all regions other than `region`
-    subregions = subregions or self._all_other_regions(region, variable)
+    subregions = subregions or df._all_other_regions(region, variable)
 
     if not len(subregions):
         msg = 'cannot aggregate variable `{}` to `{}` because it does not'\
@@ -73,7 +73,7 @@ def _aggregate_region(self, variable, region, subregions=None,
         return
 
     # compute aggregate over all subregions
-    subregion_df = self.filter(region=subregions)
+    subregion_df = df.filter(region=subregions)
     rows = subregion_df._apply_filters(variable=variable)
     if weight is None:
         col = 'region'
@@ -86,7 +86,7 @@ def _aggregate_region(self, variable, region, subregions=None,
     # if not `components=False`, add components at the `region` level
     if components is not False:
         with adjust_log_level(logger):
-            region_df = self.filter(region=region)
+            region_df = df.filter(region=region)
 
         # if `True`, auto-detect `components` at the `region` level,
         # defaults to variables below `variable` only present in `region`
