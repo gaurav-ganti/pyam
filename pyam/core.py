@@ -802,7 +802,7 @@ class IamDataFrame(object):
             method to use for aggregation, e.g. np.mean, np.sum, 'min', 'max'
         append: bool, default False
             append the aggregate timeseries to `self` and return None,
-            else return aggregate timeseries
+            else return aggregate timeseries as new :class:`IamDataFrame`
         """
         _df = _aggregate(self, variable, components=components, method=method)
 
@@ -888,12 +888,11 @@ class IamDataFrame(object):
             (currently only supported with `method='sum'`)
         append: bool, default False
             append the aggregate timeseries to `self` and return None,
-            else return aggregate timeseries
+            else return aggregate timeseries as new :class:`IamDataFrame`
         """
-        _df = _aggregate_region(
-            self, variable, region=region, subregions=subregions,
-            components=components, method=method, weight=weight
-        )
+        _df = _aggregate_region(self, variable, region=region,
+                                subregions=subregions, components=components,
+                                method=method, weight=weight)
 
         # return None if there is nothing to aggregate
         if _df is None:
@@ -985,7 +984,7 @@ class IamDataFrame(object):
             list of subregions, defaults to all regions other than `region`
         append: bool, default False
             append the downscaled timeseries to `self` and return None,
-            else return downscaled data as new `IamDataFrame`
+            else return downscaled data as new :class:`IamDataFrame`
         """
         # get default subregions if not specified
         subregions = subregions or self._all_other_regions(region)
