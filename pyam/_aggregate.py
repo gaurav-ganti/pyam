@@ -125,7 +125,7 @@ def _aggregate_time(df, variable, column, value, components, method=np.sum):
             .value
             .rename_axis(None, axis=1)
             .apply(_get_method_func(method), axis=1)
-        ], names=[column]+index, keys=[value])
+        ], names=[column] + index, keys=[value])
 
     # reset index-level order to original IamDataFrame
     _data.index = _data.index.reorder_levels(df._LONG_IDX)
