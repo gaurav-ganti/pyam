@@ -9,6 +9,7 @@ Tutorials
 
    tutorials/pyam_first_steps.ipynb
    tutorials/aggregating_downscaling_consistency.ipynb
+   tutorials/subannual_time_resolution.ipynb
    tutorials/ipcc_colors.ipynb
    tutorials/iiasa_dbs.ipynb
    tutorials/aggregating_variables_and_plotting_with_negative_values.ipynb
