@@ -1607,6 +1607,9 @@ class IamDataFrame(object):
             res.meta = out_meta.loc[keep_meta_idx]
 
         return res
+    
+    def divide(self):
+        """starting point for a divide function"""
 
 def _meta_idx(data):
     """Return the `META_IDX` from `data` by index or columns"""
